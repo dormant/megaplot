@@ -1,0 +1,127 @@
+Subject:
+Re: plot data
+From:
+Geoff Wadge <gw@mail.nerc-essc.ac.uk>
+Date:
+Fri, 26 Sep 2008 11:27:29 +0100
+To:
+rod.stewart@uwiseismic.com
+
+Rod,
+
+OK. forget "absolutely correct" should be "working towards correct". Here is a file with the mistake you spotted corrected.
+
+For the three periods:
+
+1. A dome volume estimate from 10 March 1998 (day 846) of 113 Mm3 with a total DRE volume to then of 299 Mm3 at the end of the first phase This was the one used at MVO by Ricky Herd as the carry-over volume into phase 2. There are two other "end of phase one" volumes in papers in the memoir: Sparks and Young (2002, Fig.4): 280 Mm3 and Melnik and Sparks (2002, Fig.1): ~293 Mm3.  I discussed this with Ricky and he said "I don't know about the 6 M discrepency between them, but 299 is the "zero" I'd used for the beginning of phase II. I'd guess Steve or Rob Watts looked at the figures and tweaked them slightly, but that may not have been passed back to MVO."
+
+2. From the assumed start of phase 2 on 27 November 1998 (1473) to 13 Jan. 2009 (1507) Herd has the volume rise from 299 to 305 Mm3. (see "Output of SHV from 1999 to 2003"). I've noticed another error here  - I had 13 Jan 2000 as day 1507, should be 1520 (corrected in the attached).
+
+3. As I explain in "Output of SHV...", Herd's last estimate dome survey in Phase 2 was on 22 April 2003 (day 2715). Having discussed with him the unsurveyed activity between then and the 12 July 2003 collaspe I assumed an average extrusion rate of 1 m3/s for that interval raising ing the volume  (together with one intervening pf deposit 0f 0.93M) from 546 to 553 M.  plus the final three vulcanians gives 555.7.
+
+In your plot you have calculated extrusion rate for the intervals between the cumulative volumes. This produces spikes where there are large pf deposits recorded ( in Phase 2) sandwiched between near contemporaneous estimates. This may reflect extrusive process but it may also of course represent the release of a mass that accumulated over a longer preceding period....
+
+Geoff
+
+
+
+> Geoff,
+>
+> Many thanks for that.
+>
+> Day 2162 now has a drop in volume. But I can happily work with this file.
+>
+> I am plotting extrusion rate from your data along with the dome volume from the MVO data. The plot (attached) shows that you have more data points than MVO has.
+>
+> Do you have dome volume estimates (not cumulative volume) for the missing periods:
+>
+> - End of the first extrusive phase at th beginning of 1998.
+> - Beginning of the second extrusive phase at the end of 1999.
+> - End of the second extrusive phase in mid-2003.
+>
+> Rod
+>
+>
+> Geoff Wadge wrote:
+>> Rod,
+>>
+>> Sigh, no I sent you the wrong one.. This one is absolutely the correct one..........
+>>
+>> Geoff
+>>
+>>> Geoff,
+>>>
+>>> Thanks.
+>>>
+>>> The file you sent me still has the 20 million increase on day 1930. Is that right?
+>>>
+>>> Rod
+>>>
+>>> Geoff Wadge wrote:
+>>>> Rod,
+>>>>
+>>>> The day 502 was a rogue line, there were no data for that day - now removed. Well spotted.
+>>>>
+>>>> The day 1930 sharp increase was notionally correct but is an artefact of the accounting method - the individual pf deposit values were added chronologically to the previous (dome/talus)photogrammetry survey volumes, so, as in this case, there was a pf  the day before the next survey, in accounting terms it looks like a huge jump in extrusion but isn't.  In the attached version I have done a piecewise linear interpolation between the dome/talus volume values at the days of all the pf values and added these values to the pf values at that day. This gives a smoother picture but at the cost of an assumption. The final cumualtive figure is  unaffected.
+>>>>
+>>>> I have also changed the final value slightly however. I also had a discussion with Barry Voight about this plot last year and we decided that there probably ought to be some account made for the vulcanian explosive volumes of 13-15 July 2003 (assuming that they had a juvenile component). In this version I have done that using the Herd et al. (2005) values, totalling 2.3 Mm3, which now sit at days 2797-9.
+>>>>
+>>>> Geoff
+>>>>> Two queries - is there a reason for these or are they due to the inaccuracies of the methods used?
+>>>>>
+>>>>> Day 502, the volume drops.
+>>>>>
+>>>>> Day 1930, the volume increases by 20 million m3 in a day.
+>>>>>
+>>>>>
+>>>>> Rod
+>>>>>
+>>>>> --
+>>>>> Rod Stewart, Volcano Seismologist
+>>>>> UWI Seismic Research Centre, University of the West Indies, St. Augustine, Trinidad and Tobago, West Indies
+>>>>>
+>>>>> email: rod.stewart@uwiseismic.com
+>>>>> tel: +1 868 662 4659 ext 30
+>>>>> fax: +1 868 663 9293
+>>>>> www.uwiseismic.com
+>>>>
+>>>>
+>>>
+>>>
+>>> --
+>>> Rod Stewart, Volcano Seismologist
+>>> UWI Seismic Research Centre, University of the West Indies, St. Augustine, Trinidad and Tobago, West Indies
+>>>
+>>> email: rod.stewart@uwiseismic.com
+>>> tel: +1 868 662 4659 ext 30
+>>> fax: +1 868 663 9293
+>>> www.uwiseismic.com
+>>
+>>
+>
+>
+> --
+> Rod Stewart, Volcano Seismologist
+> UWI Seismic Research Centre, University of the West Indies, St. Augustine, Trinidad and Tobago, West Indies
+>
+> email: rod.stewart@uwiseismic.com
+> tel: +1 868 662 4659 ext 30
+> fax: +1 868 663 9293
+> www.uwiseismic.com
+>
+>
+> Attachment converted: Aquascutum:wk1.png (PNGf/«IC») (0015599D)
+
+
+-- 
+
+*******************************************
+Professor Geoff Wadge
+Environmental Systems Science Centre
+University of Reading
+Reading RG6 6AL, UK
+
+tel. +44 (0)118 378 6412
+fax. +44 (0)118 378 6413
+gw@mail.nerc-essc.ac.uk
+********************************************

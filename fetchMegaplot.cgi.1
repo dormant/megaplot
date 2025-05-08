@@ -1,0 +1,398 @@
+#!/usr/bin/env perl
+#
+# R.C Stewart, Nov 2024
+# based on script by 
+# Arvid Ramdeane, Nov 2024
+
+# Variables and Definitions
+
+use strict;
+use warnings;
+use CGI ':standard';
+use CGI::Carp qw/fatalsToBrowser/;
+#use Time::Local;
+use DateTime;
+use File::Basename;
+use File::Copy;
+use List::Util qw[min max];
+use Scalar::Util qw(looks_like_number);
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# Get todays date and time (UTC)
+#
+my $today = DateTime->today;
+$today->add( days => 1 );
+
+my $tab1 = "&nbsp;&nbsp;&nbsp;&nbsp;";
+
+my $webStartPage = "/cgi-bin/fetchMegaplot.cgi";
+my $dirPlot = '/seismic/monitoring_data/megaplot3';
+
+# CGI Object
+my $q = CGI->new;
+
+
+
+# HTTP header
+print $q->header;
+
+print $q->start_html(	-title => "Megaplot",
+	#-head => [$q->meta( {-http_equiv=>'REFRESH',-content=>'60'} )], 
+		      	-script => 
+				[
+					{ -language => 'javascript', -src => "/JavaScripts/jquery.js"},
+				],
+	);
+	
+	# form
+	print("<form action='/cgi-bin/fetchMegaplot.cgi' method='get'>");
+
+	
+	############################################ STANDARD PLOTS
+	print $q->h2({-style=>"color:blue;"}, "Standard Plots");
+	print( "<EM>Data not updated regularly.</EM><BR>" );
+	my $filePlot= $q->param('filePlot');
+	if ( not defined $filePlot) {
+		$filePlot = 'fig--megaplot3--lastSixMonths.png';
+	}
+
+	my $link = sprintf( "%s?filePlot=%s", $webStartPage, "fig--megaplot3--lastSixMonths.png" );
+	print $q->a({href=>$link}, "Last 6 months" );
+	print( "$tab1" );
+	my $link = sprintf( "%s?filePlot=%s", $webStartPage, "fig--megaplot3--lastYear.png" );
+	print $q->a({href=>$link}, "Last year" );
+	print( "$tab1" );
+	my $link = sprintf( "%s?filePlot=%s", $webStartPage, "fig--megaplot3--lastTwoYears.png" );
+	print $q->a({href=>$link}, "Last two years" );
+	print( "$tab1" );
+	my $link = sprintf( "%s?filePlot=%s", $webStartPage, "fig--megaplot3--lastFiveYears.png" );
+	print $q->a({href=>$link}, "Last five years" );
+	print( "$tab1" );
+	my $link = sprintf( "%s?filePlot=%s", $webStartPage, "fig--megaplot3--pause5.png" );
+	print $q->a({href=>$link}, "Pause 5" );
+	print( "$tab1" );
+	my $link = sprintf( "%s?filePlot=%s", $webStartPage, "fig--megaplot3--wholeEruption.png" );
+	print $q->a({href=>$link}, "Whole eruption" );
+	my $link = sprintf( "%s?filePlot=%s", $webStartPage, "fig--megaplot3--webobs.png" );
+	print $q->br();
+
+	my $filePlot = join( '/', $dirPlot, $filePlot );
+	print $q->a({href=>$filePlot}, img {src=>$filePlot, align=>"LEFT", width=>"100%", border=>"0"});
+
+	print $q->hr();
+	############################################ CUSTOM PLOTS
+	print $q->h2({-style=>"color:blue;"}, "Custom Plot");
+	print $q->a({href=>$link}, "Custom plot" );
+	print( "$tab1 (wait a few minutes after submitting request)" );
+
+	print $q->h3({-style=>"color:blue;"}, "Dates");
+	my %labels = (
+	    '6m'   => 'Last 6 months',
+	    '1y'   => 'Last year',
+	    '2y' => 'Last 2 years',
+	    '5y' => 'Last 5 years',
+	    'p5' => 'Pause 5',
+	    'e' => 'Whole eruption',
+	    'c' => 'Custom',
+	);
+	my $groupThing= 'plotDuration';
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['c', '6m','1y','2y','5y','p5','e'],
+		-default=>'6m',
+		-labels=>\%labels,
+		);
+
+	print $q->br();
+	print( "Select <EM>Custom</EM> before using the following date-picker things.<BR>" );
+	print ("Start: &nbsp;");
+	print $q->input({name=>'dateBeg', type => 'date', value => '1995-01-01'});
+	print ("$tab1 Stop: &nbsp;");
+	print $q->input({name=>'dateEnd', type => 'date', value => $today->ymd});
+	print ("$tab1 (US format, sorry)<BR>\n");
+
+	print $q->h3({-style=>"color:blue;"}, "Figure");
+
+
+	print( "<TABLE border='1' cellpadding='15'><TR><TD valign='top'>" );
+	%labels = (
+	    'p'   => 'portrait',
+	    'l'   => 'landscape',
+	    's' => 'square',
+	    'w' => 'wide',
+	);
+	$groupThing= 'plotShape';
+	print( "<B>Shape</B><BR>");
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['p','l','s','w'],
+		-default=>'s',
+		-linebreak=>'true',
+		-labels=>\%labels,
+		);
+	print( "</TD><TD valign='top'>" );
+
+
+	%labels = (
+	    'compact'   => 'little more',
+	    'tight'   => 'little',
+	    'none' => 'none',
+	);
+	$groupThing= 'plotSpacing';
+	print( "<B>Spacing between panes</B><BR>");
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['none','tight','compact'],
+		-default=>'none',
+		-linebreak=>'true',
+		-labels=>\%labels,
+		);
+	print( "</TD><TD valign='top'>" );
+
+
+	%labels = (
+	    'v'   => 'vertical',
+	    'h'   => 'horizontal',
+	);
+	$groupThing= 'plotFlow';
+	print( "<B>Flow</B><BR>");
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['v','h'],
+		-default=>'v',
+		-linebreak=>'true',
+		-labels=>\%labels,
+		);
+	print( "</TD><TD valign=.top.>" );
+
+
+	%labels = (
+	    'white'   => 'White',
+	    'phases'   => 'Phases (grey)',
+	    'phasescolour' => 'Phases (colour)',
+	);
+	$groupThing= 'plotBackground';
+	print( "<B>Background</B><BR>");
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['white','phases','phasescolour'],
+		-default=>'white',
+		-linebreak=>'true',
+		-labels=>\%labels,
+		);
+
+	print( "<input name='plotSubPhases' value='y' type='checkbox'>plot sub-phases<br>");
+	print( "</TD></TR></TABLE>" );
+
+	print $q->h3({-style=>"color:blue;"}, "Data");
+
+	############################################ SEISMIC PLOTS
+	print( "<TABLE border='1' cellpadding='15'><TR><TD valign='top'>" );
+	print( "<input name='plotSeis' value='y' type='checkbox'>plot seismic<br>");
+	print( "</TD><TD valign='top'>" );
+	print( "$tab1 <input name='plotSeisOld' value='y' type='checkbox'>include old (1995-1996) seismic data<br>");
+	%labels = (
+	    'n'   => 'no',
+	    'y'   => 'vt/lf/rf',
+	    'o'   => 'vt/hybrid/lp/rockfall',
+	);
+	$groupThing= 'plotSeisTypes';
+	print( "$tab1 Plot seismic types $tab1" );
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['n','y','o'],
+		-default=>'n',
+		-labels=>\%labels,
+		);
+	print( "<BR>");
+
+	%labels = (
+	    'n'   => 'no',
+	    'w'   => 'weekly',
+	    'm'   => 'monthly',
+	);
+	$groupThing= 'samplingSeis';
+	print( "$tab1 Resample data $tab1" );
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['n','w','m'],
+		-default=>'n',
+		-labels=>\%labels,
+		);
+	print( "<BR>");
+	print("$tab1 <label for='ylimSeis'>Y axis limit</label>
+			<input type='number' value=0 id='ylimSeis' name='ylimSeis'> $tab1 0 for auto-scale<br>");
+	print( "</TD></TR>" );
+
+	############################################ GPS PLOTS
+	print( "<TR><TD valign='top'>" );
+	print( "<input name='plotGps' value='y' type='checkbox'>plot GPS<br>");
+	print( "</TD><TD valign='top'>" );
+	print("$tab1 <label for='stationsGps'>Stations to plot</label>
+			<input type='text' value='MVO1,NWBL' id='stationsGps' name='stationsGps'> $tab1 comma-separated, no spaces<br>");
+	%labels = (
+	    'n'   => 'no',
+	    'w'   => 'weekly',
+	    'm'   => 'monthly',
+	);
+	$groupThing = 'samplingGps';
+	print( "$tab1 Resample data $tab1" );
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['n','w','m'],
+		-default=>'n',
+		-labels=>\%labels,
+		);
+	print( "<BR>");
+	print( "$tab1 <input name='errorsGps' value='y' type='checkbox'>plot errors");
+	print( "&nbsp;<EM>(Doesn't work for resampled data)</EM><BR>" );
+	print("$tab1 <label for='ylimGps'>Y axis limit</label>
+			<input type='number' value=0 id='ylimGps' name='ylimGps'> $tab1 0 for auto-scale<br>");
+	%labels = (
+	    'n'   => 'no',
+	    'w'   => 'weekly',
+	    'm'   => 'monthly',
+	);
+	print( "</TD></TR>" );
+
+	############################################ GAS PLOTS
+	print( "<TR><TD valign='top'>" );
+	print( "<input name='plotGas' value='y' type='checkbox'>plot gas<br>");
+	print( "</TD><TD valign='top'>" );
+
+	$groupThing = 'samplingGas';
+	print( "$tab1 Resample data $tab1" );
+    	print $q->radio_group(
+		-name=>$groupThing,
+	        -values=>['n','w','m'],
+		-default=>'n',
+		-labels=>\%labels,
+		);
+	print( "<BR>");
+	print( "$tab1 <input name='errorsGas' value='y' type='checkbox'>plot errors");
+	print( "&nbsp;<EM>(Doesn't work for resampled data)</EM><BR>" );
+	print("$tab1 <label for='ylimGas'>Y axis limit</label>
+			<input type='number' value=0 id='ylimGas' name='ylimGas'> $tab1 0 for auto-scale<br>");
+	print( "</TD></TR>" );
+
+	############################################ FUMAROLE PLOTS
+	print( "<TR><TD valign='top'>" );
+	print( "<input name='plotFumTemp' value='y' type='checkbox'>plot fumarole temperature<br>");
+	print( "</TD><TD valign='top'>" );
+	print("$tab1 <label for='stationFumTemp'>Station to plot</label>
+			<input type='text' value='Mean' id='stationFumTemp' name='stationFumTemp'><br>");
+	print("$tab1 <label for='nrmeanFumTemp'>running mean filter</label>
+			<input type='number' value=1 id='nrmeanFumTemp' name='nrmeanFumTemp'> $tab1 1 for no smoothing<br>");
+	print( "</TD></TR>" );
+
+
+	print( "<TR><TD valign='top'>" );
+	print( "<input name='plotDomeVol' value='y' type='checkbox'>plot dome volume<br>");
+	print( "</TD></TR>" );
+	print( "<TR><TD valign='top'>" );
+	print( "<input name='plotDomeExtr' value='y' type='checkbox'>plot extrusion rate<br>");
+	print( "</TD></TR><TABLE>" );
+
+	print( "<BR>" );
+	print("
+			<label for='titleOver'>Title for plot</label>$tab1
+			<input type='text' value='useDates' id='titleOver' name='titleOver'> $tab1 'useDates' creates a title based on date span of plot<br>
+			");
+
+
+	print(" <br><input type='submit' value='Submit'> </form> ");
+	print $q->defaults('Reset');
+
+	print $q->hr();
+	print $q->h2("Debug");
+	# check if url string contain plotDuration
+	if ( defined $q->param) {
+		my $dateBeg;
+		my $dateEnd;
+		my $plotDuration = $q->param('plotDuration');
+		if( $plotDuration eq 'c' ) {
+			$dateBeg = $q->param('dateBeg');
+			$dateEnd = $q->param('dateEnd');
+		} elsif( $plotDuration eq '6m' ){
+			$dateEnd = $today->ymd;
+			my $dateBeg0 = DateTime->today;
+			$dateBeg0->subtract( months => 6 );
+			$dateBeg = $dateBeg0->ymd;
+		} elsif ( $plotDuration eq '1y' ) {
+			$dateEnd = $today->ymd;
+			my $dateBeg0 = $today->subtract( years => 1 );
+			$dateBeg = $dateBeg0->ymd;
+		} elsif ( $plotDuration eq '2y' ) {
+			$dateEnd = $today->ymd;
+			my $dateBeg0 = $today->subtract( years => 2 );
+			$dateBeg = $dateBeg0->ymd;
+		} elsif ( $plotDuration eq '5y' ) {
+			$dateEnd = $today->ymd;
+			my $dateBeg0 = $today->subtract( years => 5 );
+			$dateBeg = $dateBeg0->ymd;
+		} elsif ( $plotDuration eq 'p5' ) {
+			my $dateBeg0 = DateTime->new(
+				year       => 2010,
+		        	month      => 2,
+				day        => 13,
+				hour       => 0,
+				minute     => 0,
+				second     => 0 );
+			$dateBeg = $dateBeg0->ymd;
+			$dateEnd = $today->ymd;
+		} elsif ( $plotDuration eq 'e' ) {
+			my $dateBeg0 = DateTime->new(
+				year       => 1995,
+		        	month      => 1,
+				day        => 1,
+				hour       => 0,
+				minute     => 0,
+				second     => 0 );
+			$dateBeg = $dateBeg0->ymd;
+			$dateEnd = $today->ymd;
+		}
+
+		# get all params and print
+		# write to file
+		my @param_names = $q->param;
+		if ( "plotDuration" ~~ @param_names ) {
+
+			# write to file
+			open(FH, ">", join( '/', '/mnt/mvofls2/Seismic_Data/monitoring_data/megaplot3', 'configMegaplotWebobs.m') ) or die $!;
+
+			my @noValues = qw( dateBeg dateEnd );
+			my $regex = join ('|', @noValues);
+			foreach my $name (@param_names)
+			{
+				if ($name !~ m/$regex/) {
+					# print to browser
+					my $param_value = $q->param($name);
+
+					# write to file
+					my $file_str = "$name='$param_value';\n";
+					if (looks_like_number($param_value)) {
+						$file_str =~ s/'//g;
+					}
+					print FH $file_str;
+					print "$file_str<BR>";
+				}
+			}
+			print FH "filePlot='fig--megaplot3--webobs.png';\n";
+			print "filePlot='fig--megaplot3--webobs.png';<BR>";
+			print FH "plotSize=1200;\n";
+			print "plotSize=1200;<BR>\n";
+			print FH "runMode='webobs';\n";
+			print "runMode='webobs';<BR>\n";
+			print FH "dateBeg='$dateBeg';\n";
+			print "dateBeg='$dateBeg';<BR>\n";
+			print FH "dateEnd='$dateEnd';\n";
+			print "dateEnd='$dateEnd';<BR>\n";
+
+		}
+		
+		close(FH) or die;
+
+	}	
+	
+print $q->end_html, "\n";
+

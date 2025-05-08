@@ -1,0 +1,26 @@
+Megaplot todo list
+
+bugs
+sort VT scaling
+DONE-ISH figure sizes for batch plots
+DONE tight and compact plots dont have x ticks
+DONE-ISH font sizes for batch and gui
+y max and min for errors
+errors for GPS
+shows errors in custom when not selected
+GpsGM not being resampled?
+DONE box edges on backgrounded plot
+why not getting plot on screen when in gui?
+font size for wide plot too small
+
+
+
+features
+DONE SORT OF implement size in pixels
+DONE Add subphases
+Add transition phases
+add lines from a file
+error bars option
+test filename type save
+DONE old seismic types
+plot one type only

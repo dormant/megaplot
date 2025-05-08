@@ -1,0 +1,46 @@
+dateBeg = datetime( 1995, 1, 1 );
+dateEnd = dateshift( dateNow, 'end', 'day' );
+
+plotShape = 's';
+plotSize = 0;
+plotSize = plotSize;
+plotSpacing = 'none';
+plotBackground = 'a';
+plotSubPhases = 'n';
+plotFlow = 'v';
+
+plotSeis = 'y';
+plotSeisTypes = 'n';
+samplingSeis = 'a';
+plotSeisOld = 'a';
+ylimSeis = 0;
+
+plotGps = 'y';
+stationsGps = 'MVO1,NWBL';
+samplingGps = 'a';
+errorsGps = 'a';
+ylimGps = 0;
+
+plotGas = 'y';
+samplingGas = 'a';
+errorsGas = 'a';
+ylimGas = 0;
+
+plotFumTemp = 'n';
+nrmeanFumTemp = 1;
+stationFumTemp = 'Mean';
+
+plotDomeVol = 'n';
+plotDomeExtr = 'n';
+
+runMode = 'gui';
+runMode = runMode;
+runLoudness = 'verbose';
+runLoudness = runLoudness;
+fileBatch = '';             %%%%%%% CHECK WHY
+fileBatch = fileBatch;      %%%%%%%
+filePlot = 'fig--megaplot3.png';
+
+reFetchData = 'y';
+titleOver = 'useDates';
+
