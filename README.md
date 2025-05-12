@@ -37,8 +37,15 @@
 
 ### GPS
 
-* **Add** 
-* Data will be updated when you  reply 'Y' to the **question**.
+* Copy data to local directory
+```
+$ cd ~/src/megaplot/data/gps/gps-auto-final
+$ cp /mnt/volcano01/Deformation/GPS_auto/data/final/*.txt .
+```
+* In MATLAB
+```
+>> fetchGps
+```
 
 ### SO2
 

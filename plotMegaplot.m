@@ -22,7 +22,7 @@ switch nVarargs
         sourceArgs = varargin{1};
 end
 ARGS = askArgs( sourceArgs );
-dirCurrent = cd( fullfile( setup.DirHome, 'projects/megaplot' ) );
+dirCurrent = cd( fullfile( setup.DirHome, 'src/megaplot' ) );
 
 
 
@@ -244,7 +244,7 @@ g0data = g0data - mean( g0data, 'omitnan' );
 datetimeGpsGm = datetimedata';
 dataGpsGm = g0data';
 
-load( '/home/seisan/projects/megaplot/data/gps/gps_auto_final_all.mat');
+load( '/home/seisan/src/megaplot/data/gps/gps_auto_final_all.mat');
 stasGps = split( stationsGps, ',' );
 nstaGps = size(stasGps,1);
 for ista = 1: nstaGps
