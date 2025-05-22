@@ -58,8 +58,8 @@ function plotPhases( yLimits, plotSubPhases, inColor )
     xbox1 = datetime( datenum( 1995, 1, 1, 0, 0, 0 ), 'ConvertFrom','datenum');
     xbox2 = datetime( dateCommon( 'now' ), 'ConvertFrom','datenum');
     Xpatch = [ xbox1 xbox1 xbox2 xbox2 ];
-    axp = patch( Xpatch, Ypatch, colourBack, 'EdgeColor', colourBox, 'HandleVisibility','off' );
+    axp = fill( Xpatch, Ypatch, colourBack, 'EdgeColor', colourBox, 'HandleVisibility','off' );
     uistack(axp,'bottom');
-    %hold off;
+    
 
 end

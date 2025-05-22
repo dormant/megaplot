@@ -383,7 +383,6 @@ switch samplingGps
         nDownsample = 0;
 end
 if nDownsample > 0
-    %[datetimeGps, dataGps, errGps] = meanJumpsStdev( datetimeGps, dataGps, errGps, nDownsample );
     tmp = datetimeGps';
     tmp = downsample(tmp,nDownsample);
     datetimeGps = tmp';
@@ -412,7 +411,6 @@ if nDownsample > 0
         [datetimeGas,dataGas] = meanJumps( datetimeGas, dataGas, nDownsample );
     end
     if sum(dataGasTraverse,'omitnan') > 0
-    %    [datetimeGasTraverse,dataGasTraverse] = meanJumps( datetimeGasTraverse, dataGasTraverse, nDownsample );
         [datetimeGasTraverse, dataGasTraverse, errGasTraverse] = meanJumpsStdev( datetimeGasTraverse, dataGasTraverse, errGasTraverse, nDownsample );
     end
     idxCospec = datetimeGas < begDoas;
@@ -696,8 +694,9 @@ for iTile = 1:tilesN
         end
         ylim( [0 maxDomeExtr] * yLimMult );
 
-    end
+
 % ------------------------------ End plot tiles
+    end
 
 
 
@@ -743,8 +742,6 @@ for iTile = 1:tilesN
         case 'phasescolour'
             plotPhases( yLimits, plotSubPhases, true );
     end
-
-    box on;
 
     hold on;
     xTicks = get(gca,'xTick');

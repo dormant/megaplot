@@ -1,5 +1,7 @@
 # megaplot
 
+## ~/src/megaplot
+
 *MATLAB* scripts to draw various versions of the megaplot.
 
 ## plotMegaplot.m
