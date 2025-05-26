@@ -72,7 +72,7 @@ function ARGS = askArgs( sourceArgs )
     fileBatch = fileBatchDef;      %%%%%%%
     filePlotDef = 'fig--megaplot3.png';
 
-    reFetchDataDef = 'y';
+    reFetchDataDef = 'n';
     titleOverDef = 'useDates';
 
    
@@ -135,7 +135,7 @@ function ARGS = askArgs( sourceArgs )
             dateBeg = datetime(datimBeg,'ConvertFrom','datenum')';
             dateEnd = datetime(datimEnd,'ConvertFrom','datenum')';
 
-            plotShape = inputd( 'Plot shape (l|p|s|w)', 's', plotShapeDef );
+            plotShape = inputd( 'Plot shape (l|p|s|w|e)', 's', plotShapeDef );
             plotSize = inputd( 'Plot size (pixels of longest side)', 'i', plotSizeDef );
             plotSpacing = inputd( 'Plot layout (compact|tight|none)', 's', plotSpacingDef );
             plotBackground = inputd( 'Plot background (white|phases|phasescolour|a)', 's', plotBackgroundDef );

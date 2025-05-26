@@ -79,7 +79,6 @@ else
     markerSizeSmall = 4;
 end
 
-
 if strcmpi( plotSeisOld, 'a' )
     if dateBeg > datetime(1996,10,28)
         plotSeisOld = 'n';
@@ -697,7 +696,7 @@ for iTile = 1:tilesN
 
 % ------------------------------ End plot tiles
     end
-
+    box on;
 
 
 % ============================== Modify tile
@@ -737,9 +736,9 @@ for iTile = 1:tilesN
     fontsize(ax(iTile).YAxis,scale=0.8);
 
     switch plotBackground
-        case 'phases'
+        case {'phases','p'}
             plotPhases( yLimits, plotSubPhases, false );
-        case 'phasescolour'
+        case {'phasescolour','pc'}
             plotPhases( yLimits, plotSubPhases, true );
     end
 
@@ -787,7 +786,6 @@ an = annotation('textbox', [0.02, 0.02, 0.2, 0.015], 'string', infoRun, ...
 if plotSize > 0
     fontsize(an,scale=0.5);
 end
-
 
 
 % ============================== Save plot
